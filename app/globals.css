@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --color-cream: #F6ECDF;
+  --color-ink: #3F362E;
+  --color-ink-soft: #4A4038;
+  --color-muted: #A89A8B;
+  --color-muted-2: #94887B;
+  --color-muted-3: #6E6359;
+  --color-muted-4: #8A7C6D;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-coral: #F4977E;
+  --color-coral-deep: #EE8164;
+  --color-coral-strong: #D9583C;
+  --color-coral-accent: #E0654A;
+  --color-coral-dark: #C5503A;
+  --color-coral-tint: #FBE3D8;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-feed-bg: #FFFDF9;
+  --color-border: #ECE0D0;
+  --color-border-soft: #F0E6D8;
+  --color-border-line: #E7DAC8;
+
+  --color-kid-blue: #A9D9E8;
+  --color-kid-blue-text: #1F7A93;
+  --color-kid-blue-tint: #C7E7F1;
+  --color-kid-blue-deep: #2E89A6;
+
+  --color-anuncio: #CCD8F4;
+  --color-anuncio-text: #4E72C8;
+
+  --color-logro: #CFEBD8;
+  --color-logro-text: #3E9B6C;
+
+  --color-dashed: #DBCDBA;
+  --color-dashed-text: #B0A290;
+  --color-photo-bg: #F4ECE1;
+
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
+  --font-display: var(--font-fredoka), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4D6C4;
+  border-radius: 8px;
+  border: 3px solid transparent;
+  background-clip: content-box;
 }
