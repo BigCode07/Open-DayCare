@@ -1,6 +1,6 @@
 # SPEC 03 — Login and Activate Account pages
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 01 (feed home estático), SPEC 02 (kids pages) — reusa fuentes, tokens de color, sidebar (aunque estas páginas no lo usan)
 > **Date:** 2026-07-30
 > **Objective:** Build `/login` and `/activate` pages that visually match the mockups `login.dc.html` and `activar-cuenta.dc.html`, with placebo navigation to the feed after login/activation, and links to `/forgot-password` (out of scope).
@@ -67,30 +67,30 @@ Esta feature **no introduce estructuras de datos nuevas**. Los formularios son s
 
 ## Acceptance criteria
 
-- [ ] Al abrir `http://localhost:3000/login` se muestra el layout de dos columnas con panel de branding coral a la izquierda y formulario a la derecha.
-- [ ] El panel izquierdo muestra logo OpenDayCare, headline "El día de cada niño, compartido con su familia", tagline y footer "Guardería Sala Soles".
-- [ ] Los botones "Personal" y "Familia" muestran estado visual activo (fondo `#FBE3D8`, borde `#F2937A`, color `#D9583C`) cuando están seleccionados.
-- [ ] Al hacer click en "Personal" el input de email se pre-llena con `caro@opendaycare.com`.
-- [ ] Al hacer click en "Familia" el input de email se pre-llena con `lucia.fernandez@gmail.com`.
-- [ ] El link "¿Olvidaste tu contraseña?" navega a `/forgot-password` (aunque la ruta no exista aún).
-- [ ] El botón "Iniciar sesión" navega a `/` (feed) al hacer click.
-- [ ] El link "Activá tu cuenta" navega a `/activate`.
-- [ ] Al intentar enviar el formulario de login con email vacío se muestra error inline "El email es obligatorio".
-- [ ] Al ingresar un email con formato inválido se muestra error inline "Ingresá un email válido".
-- [ ] Al ingresar una contraseña con menos de 6 caracteres se muestra error inline "La contraseña debe tener al menos 6 caracteres".
-- [ ] Al abrir `http://localhost:3000/activate` se muestra el layout centrado con logo, headline y tarjeta de invitación.
-- [ ] La tarjeta de invitación muestra avatar circular con inicial "M", texto "Te invitaron a seguir a" y nombre "Mateo · Sala Soles".
-- [ ] El input de código de invitación está pre-llenado con `7K4P9` y usa fuente Fredoka con letter-spacing 3px.
-- [ ] El input de email está pre-llenado con `lucia.fernandez@gmail.com`.
-- [ ] El checkbox de autorización de fotos muestra caja amarilla con texto "Autorizo a la guardería a tomar y compartir fotos de mi hijo dentro de la app".
-- [ ] El botón "Activar mi cuenta" navega a `/` (feed) al hacer click.
-- [ ] El link "Iniciar sesión" navega a `/login`.
-- [ ] Al intentar enviar el formulario de activación con código vacío se muestra error inline "El código de invitación es obligatorio".
-- [ ] Al intentar enviar el formulario de activación sin tildar el checkbox se muestra error inline "Debés autorizar el uso de fotos".
-- [ ] En viewport < 768px el panel izquierdo de `/login` no es visible y el formulario ocupa todo el ancho.
-- [ ] En viewport mobile no hay scroll horizontal en `/login` ni en `/activate`.
-- [ ] `pnpm lint` no reporta errores.
-- [ ] `pnpm build` completa sin errores de tipos.
+- [x] Al abrir `http://localhost:3000/login` se muestra el layout de dos columnas con panel de branding coral a la izquierda y formulario a la derecha.
+- [x] El panel izquierdo muestra logo OpenDayCare, headline "El día de cada niño, compartido con su familia", tagline y footer "Guardería Sala Soles".
+- [x] Los botones "Personal" y "Familia" muestran estado visual activo (fondo `#FBE3D8`, borde `#F2937A`, color `#D9583C`) cuando están seleccionados.
+- [x] Al hacer click en "Personal" el input de email se pre-llena con `caro@opendaycare.com`.
+- [x] Al hacer click en "Familia" el input de email se pre-llena con `lucia.fernandez@gmail.com`.
+- [x] El link "¿Olvidaste tu contraseña?" navega a `/forgot-password` (aunque la ruta no exista aún).
+- [x] El botón "Iniciar sesión" navega a `/` (feed) al hacer click.
+- [x] El link "Activá tu cuenta" navega a `/activate`.
+- [x] Al intentar enviar el formulario de login con email vacío se muestra error inline "El email es obligatorio".
+- [x] Al ingresar un email con formato inválido se muestra error inline "Ingresá un email válido".
+- [x] Al ingresar una contraseña con menos de 6 caracteres se muestra error inline "La contraseña debe tener al menos 6 caracteres".
+- [x] Al abrir `http://localhost:3000/activate` se muestra el layout centrado con logo, headline y tarjeta de invitación.
+- [x] La tarjeta de invitación muestra avatar circular con inicial "M", texto "Te invitaron a seguir a" y nombre "Mateo · Sala Soles".
+- [x] El input de código de invitación está pre-llenado con `7K4P9` y usa fuente Fredoka con letter-spacing 3px.
+- [x] El input de email está pre-llenado con `lucia.fernandez@gmail.com`.
+- [x] El checkbox de autorización de fotos muestra caja amarilla con texto "Autorizo a la guardería a tomar y compartir fotos de mi hijo dentro de la app".
+- [x] El botón "Activar mi cuenta" navega a `/` (feed) al hacer click.
+- [x] El link "Iniciar sesión" navega a `/login`.
+- [x] Al intentar enviar el formulario de activación con código vacío se muestra error inline "El código de invitación es obligatorio".
+- [x] Al intentar enviar el formulario de activación sin tildar el checkbox se muestra error inline "Debés autorizar el uso de fotos".
+- [x] En viewport < 768px el panel izquierdo de `/login` no es visible y el formulario ocupa todo el ancho.
+- [x] En viewport mobile no hay scroll horizontal en `/login` ni en `/activate`.
+- [x] `pnpm lint` no reporta errores.
+- [x] `pnpm build` completa sin errores de tipos.
 
 ## Decisions
 
