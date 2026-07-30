@@ -1,136 +1,7 @@
 "use client";
 
 import type { SVGProps } from "react";
-
-function SunLogo(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="21"
-      height="21"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#fff"
-      strokeWidth={2.2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-    </svg>
-  );
-}
-
-function PlusIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#fff"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-
-function HomeIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="19"
-      height="19"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
-    </svg>
-  );
-}
-
-function KidsIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="19"
-      height="19"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <circle cx="9" cy="7" r="3" />
-      <circle cx="17" cy="9" r="2.4" />
-      <path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 20a5 5 0 0 1 5.5-4.9" />
-    </svg>
-  );
-}
-
-function BellIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="19"
-      height="19"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0" />
-    </svg>
-  );
-}
-
-function UserIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="19"
-      height="19"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
-function LogoutIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
-    </svg>
-  );
-}
+import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
 
 function CameraIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -225,196 +96,32 @@ function PhotoPlaceholderIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-function SidebarLogo() {
-  return (
-    <div
-      style={{
-        width: 38,
-        height: 38,
-        borderRadius: 12,
-        background: "linear-gradient(155deg,#F8C3A8,#F2937A)",
-      }}
-      className="flex items-center justify-center flex-none"
-    >
-      <SunLogo />
-    </div>
-  );
-}
-
-function SidebarBrand() {
-  return (
-    <a
-      href="#"
-      onClick={(e) => e.preventDefault()}
-      className="flex items-center gap-[11px] px-2 pb-[22px] pt-1"
-      style={{ textDecoration: "none", color: "inherit" }}
-    >
-      <SidebarLogo />
-      <div>
-        <div
-          className="leading-none text-[17px] text-ink"
-          style={{ fontFamily: "var(--font-fredoka)", fontWeight: 600 }}
-        >
-          OpenDayCare
-        </div>
-        <div className="text-[11.5px] text-muted mt-[2px]">Sala Soles</div>
-      </div>
-    </a>
-  );
-}
-
-function SidebarNewPost() {
-  return (
-    <a
-      href="#"
-      onClick={(e) => e.preventDefault()}
-      className="flex items-center justify-center gap-2 w-full py-3 rounded-[14px] text-white mb-[18px]"
-      style={{
-        background: "linear-gradient(180deg,#F4977E,#EE8164)",
-        fontWeight: 800,
-        fontSize: 14.5,
-        boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
-      }}
-    >
-      <PlusIcon />
-      Nueva publicación
-    </a>
-  );
-}
-
-function NavItem({
-  icon,
-  label,
-  active,
+function Avatar({
+  letter,
+  bg,
+  color,
+  size = 44,
 }: {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
+  letter: string;
+  bg: string;
+  color: string;
+  size?: number;
 }) {
   return (
-    <a
-      href="#"
-      onClick={(e) => e.preventDefault()}
-      className="flex items-center gap-3 px-3 py-[11px] rounded-[12px] text-[14.5px]"
-      style={{
-        background: active ? "#FBE3D8" : "transparent",
-        color: active ? "#D9583C" : "#6E6359",
-        fontWeight: active ? 800 : 600,
-      }}
-    >
-      {icon}
-      {label}
-    </a>
-  );
-}
-
-function SidebarNav() {
-  return (
-    <nav className="flex flex-col gap-1 flex-1">
-      <NavItem icon={<HomeIcon />} label="Feed" active />
-      <NavItem icon={<KidsIcon />} label="Niños" />
-      <NavItem icon={<BellIcon />} label="Avisos" />
-      <NavItem icon={<UserIcon />} label="Mi cuenta" />
-    </nav>
-  );
-}
-
-function SidebarUser() {
-  return (
     <div
-      className="border-t pt-[14px] mt-[10px]"
-      style={{ borderColor: "#ECE0D0" }}
-    >
-      <div className="flex items-center gap-[11px] py-[6px] px-2">
-        <div
-          className="flex items-center justify-center flex-none"
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: "50%",
-            background: "#F2937A",
-            color: "#fff",
-            fontFamily: "var(--font-fredoka)",
-            fontWeight: 600,
-            fontSize: 16,
-          }}
-        >
-          C
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-[14px] font-extrabold text-ink">Caro Giménez</div>
-          <div className="text-[12px] text-muted">Maestra · Soles</div>
-        </div>
-        <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
-          title="Cerrar sesión"
-          className="flex items-center justify-center flex-none"
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 10,
-            background: "#F6ECDF",
-            color: "#94887B",
-          }}
-        >
-          <LogoutIcon />
-        </a>
-      </div>
-    </div>
-  );
-}
-
-function Sidebar() {
-  return (
-    <aside
-      className="hidden md:flex flex-col px-4 py-6 sticky top-0 h-screen flex-none"
+      className="flex items-center justify-center flex-none"
       style={{
-        width: 248,
-        background: "#FFFDF9",
-        borderRight: "1px solid #ECE0D0",
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: bg,
+        color: color,
+        fontFamily: "var(--font-fredoka)",
+        fontWeight: 600,
+        fontSize: 17,
       }}
     >
-      <SidebarBrand />
-      <SidebarNewPost />
-      <SidebarNav />
-      <SidebarUser />
-    </aside>
-  );
-}
-
-function MobileTopBar() {
-  return (
-    <div
-      className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-10"
-      style={{
-        background: "#FFFDF9",
-        borderBottom: "1px solid #ECE0D0",
-      }}
-    >
-      <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-2">
-        <SidebarLogo />
-        <div
-          className="leading-none text-[16px] text-ink"
-          style={{ fontFamily: "var(--font-fredoka)", fontWeight: 600 }}
-        >
-          OpenDayCare
-        </div>
-      </a>
-      <a
-        href="#"
-        onClick={(e) => e.preventDefault()}
-        className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white"
-        style={{
-          background: "linear-gradient(180deg,#F4977E,#EE8164)",
-          fontWeight: 800,
-          fontSize: 13.5,
-          boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
-        }}
-      >
-        <PlusIcon />
-        Nueva publicación
-      </a>
+      {letter}
     </div>
   );
 }
@@ -458,41 +165,7 @@ function PostBadge({
   );
 }
 
-function Avatar({
-  letter,
-  bg,
-  color,
-  size = 44,
-}: {
-  letter: string;
-  bg: string;
-  color: string;
-  size?: number;
-}) {
-  return (
-    <div
-      className="flex items-center justify-center flex-none"
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: bg,
-        color: color,
-        fontFamily: "var(--font-fredoka)",
-        fontWeight: 600,
-        fontSize: 17,
-      }}
-    >
-      {letter}
-    </div>
-  );
-}
-
-function PostCard({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function PostCard({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="px-[22px] py-5 rounded-[20px]"
@@ -543,13 +216,7 @@ function PostHeader({
   );
 }
 
-function PostFooter({
-  likes,
-  comments,
-}: {
-  likes: number;
-  comments: number;
-}) {
+function PostFooter({ likes, comments }: { likes: number; comments: number }) {
   return (
     <div
       className="flex items-center gap-[18px] mt-4 pt-[14px]"
@@ -573,7 +240,7 @@ function PostFooter({
         onClick={(e) => e.preventDefault()}
         className="text-coral-dark font-extrabold text-[14px]"
       >
-        Editar
+        Edit
       </a>
     </div>
   );
@@ -592,9 +259,7 @@ function ComposeCard() {
       }}
     >
       <Avatar letter="C" bg="#F2937A" color="#fff" size={40} />
-      <span className="flex-1 text-muted text-[15px]">
-        Compartí un momento…
-      </span>
+      <span className="flex-1 text-muted text-[15px]">Share a moment…</span>
       <span
         className="flex items-center justify-center"
         style={{
@@ -619,7 +284,7 @@ function FeedColumn() {
           className="text-[12.5px] font-extrabold text-coral-strong"
           style={{ letterSpacing: ".8px", marginBottom: 4 }}
         >
-          GUARDERÍA · SALA SOLES
+          DAYCARE · SOLES ROOM
         </div>
         <h1
           className="m-0 text-ink"
@@ -629,10 +294,10 @@ function FeedColumn() {
             fontSize: 30,
           }}
         >
-          Buenas, Caro
+          Hi, Caro
         </h1>
         <p className="mt-[5px] mb-0 text-muted-2 text-[14.5px]">
-          12 niños · martes 17 jun
+          12 kids · Tuesday, Jun 17
         </p>
       </div>
 
@@ -643,7 +308,7 @@ function FeedColumn() {
           className="text-[12.5px] font-extrabold"
           style={{ letterSpacing: ".8px", color: "#8A7C6D" }}
         >
-          PUBLICADO HOY
+          POSTED TODAY
         </span>
         <span className="flex-1 h-px" style={{ background: "#E7DAC8" }} />
       </div>
@@ -655,10 +320,10 @@ function FeedColumn() {
             avatarBg="#A9D9E8"
             avatarColor="#1F7A93"
             title="Mateo"
-            subtitle="14:20 · publicado por vos"
+            subtitle="14:20 · posted by you"
             badge={
               <PostBadge
-                label="LOGRO"
+                label="MILESTONE"
                 bgColor="#CFEBD8"
                 dotColor="#3E9B6C"
                 textColor="#3E9B6C"
@@ -666,7 +331,7 @@ function FeedColumn() {
             }
           />
           <div className="text-[12.5px] text-muted mb-[10px]">
-            Para: familia de Mateo
+            For: Mateo&apos;s family
           </div>
           <p
             className="m-0"
@@ -676,8 +341,8 @@ function FeedColumn() {
               color: "#4A4038",
             }}
           >
-            ¡Usó el orinal solito por primera vez! Estaba feliz de contárselo a
-            todos. Un gran paso.
+            He used the potty by himself for the first time! He was so happy to
+            tell everyone. A big step.
           </p>
           <PostFooter likes={3} comments={1} />
         </PostCard>
@@ -688,10 +353,10 @@ function FeedColumn() {
             avatarBg="#A9D9E8"
             avatarColor="#1F7A93"
             title="Mateo"
-            subtitle="09:40 · publicado por vos"
+            subtitle="09:40 · posted by you"
             badge={
               <PostBadge
-                label="ACTIVIDAD"
+                label="ACTIVITY"
                 bgColor="#C7E7F1"
                 dotColor="#2E89A6"
                 textColor="#2E89A6"
@@ -699,7 +364,7 @@ function FeedColumn() {
             }
           />
           <div className="text-[12.5px] text-muted mb-[10px]">
-            Para: familia de Mateo
+            For: Mateo&apos;s family
           </div>
           <p
             className="m-0"
@@ -709,8 +374,8 @@ function FeedColumn() {
               color: "#4A4038",
             }}
           >
-            Pintamos con témperas esta mañana. Mateo eligió el azul para todo y
-            se concentró un montón mezclando colores.
+            We painted with tempera this morning. Mateo chose blue for
+            everything and was very focused mixing colors.
           </p>
           <a
             href="#"
@@ -723,9 +388,7 @@ function FeedColumn() {
             }}
           >
             <PhotoPlaceholderIcon />
-            <span className="text-[13.5px]">
-              Foto · pintando con témperas
-            </span>
+            <span className="text-[13.5px]">Photo · painting with tempera</span>
           </a>
           <PostFooter likes={5} comments={2} />
         </PostCard>
@@ -735,11 +398,11 @@ function FeedColumn() {
             avatarLetter=""
             avatarBg="#CCD8F4"
             avatarColor="#4E72C8"
-            title="Anuncio general"
-            subtitle="07:50 · publicado por vos"
+            title="General notice"
+            subtitle="07:50 · posted by you"
             badge={
               <PostBadge
-                label="ANUNCIO"
+                label="NOTICE"
                 bgColor="#CCD8F4"
                 dotColor="#4E72C8"
                 textColor="#4E72C8"
@@ -761,7 +424,7 @@ function FeedColumn() {
             }
           />
           <div className="text-[12.5px] text-muted mb-[10px]">
-            Para: toda la sala
+            For: the whole room
           </div>
           <p
             className="m-0"
@@ -771,8 +434,8 @@ function FeedColumn() {
               color: "#4A4038",
             }}
           >
-            El viernes salimos al parque por la mañana. Recuerden mandar gorra
-            y una botellita de agua.
+            On Friday we&apos;re going to the park in the morning. Remember to
+            send a hat and a water bottle.
           </p>
           <PostFooter likes={8} comments={0} />
         </PostCard>
@@ -784,9 +447,9 @@ function FeedColumn() {
 export default function Home() {
   return (
     <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
-      <Sidebar />
+      <Sidebar activeItem="feed" />
       <main className="flex-1 min-w-0 h-screen overflow-y-auto">
-        <MobileTopBar />
+        <MobileTopBar activeItem="feed" />
         <FeedColumn />
       </main>
     </div>
