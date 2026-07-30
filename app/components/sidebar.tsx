@@ -343,10 +343,12 @@ export function MobileTopBar({
   activeItem,
   actionLabel,
   actionHref,
+  onAction,
 }: {
   activeItem: NavItem;
   actionLabel?: string;
   actionHref?: string;
+  onAction?: () => void;
 }) {
   const isKids = activeItem === "kids";
 
@@ -367,21 +369,24 @@ export function MobileTopBar({
           OpenDayCare
         </div>
       </Link>
-      {isKids && actionHref ? (
-        <Link
-          href={actionHref}
-          className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white"
+      {isKids && (actionHref || onAction) ? (
+        <button
+          type="button"
+          onClick={() => {
+            if (onAction) onAction();
+          }}
+          className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white border-none cursor-pointer"
           style={{
             background: "linear-gradient(180deg,#F4977E,#EE8164)",
             fontWeight: 800,
             fontSize: 13.5,
             boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
-            textDecoration: "none",
+            fontFamily: "inherit",
           }}
         >
           <PlusIcon />
           {actionLabel || "Add child"}
-        </Link>
+        </button>
       ) : (
         <a
           href="#"
