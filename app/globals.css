@@ -2,6 +2,7 @@
 
 @theme {
   --color-cream: #F6ECDF;
+  --color-page-bg: #FBF4EC;
   --color-ink: #3F362E;
   --color-ink-soft: #4A4038;
   --color-muted: #A89A8B;
@@ -15,9 +16,12 @@
   --color-coral-accent: #E0654A;
   --color-coral-dark: #C5503A;
   --color-coral-tint: #FBE3D8;
+  --color-coral-end: #EC7E62;
+  --color-coral-border: #F2937A;
 
   --color-feed-bg: #FFFDF9;
   --color-border: #ECE0D0;
+  --color-input-border: #EADFD0;
   --color-border-soft: #F0E6D8;
   --color-border-line: #E7DAC8;
 
@@ -36,6 +40,11 @@
   --color-dashed-text: #B0A290;
   --color-photo-bg: #F4ECE1;
 
+  --color-placeholder: #B6A99B;
+  --color-auth-box-bg: #FBF1D6;
+  --color-auth-box-text: #8A7234;
+  --color-check-green: #5FB97E;
+
   --font-sans: var(--font-nunito), system-ui, sans-serif;
   --font-display: var(--font-fredoka), system-ui, sans-serif;
 }
@@ -45,6 +54,10 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+::placeholder {
+  color: var(--color-placeholder);
 }
 
 ::-webkit-scrollbar {
