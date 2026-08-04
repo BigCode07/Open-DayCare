@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createSession } from "@/app/lib/session";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("lucia.fernandez@gmail.com");
+  const [email, setEmail] = useState("caro@opendaycare.com");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
@@ -31,6 +32,10 @@ export default function LoginPage() {
       newErrors.password = "La contraseña es obligatoria";
     } else if (password.length < 6) {
       newErrors.password = "La contraseña debe tener al menos 6 caracteres";
+    }
+
+    if (Object.keys(newErrors).length === 0 && !createSession(email)) {
+      newErrors.email = "Credenciales incorrectas";
     }
 
     setErrors(newErrors);

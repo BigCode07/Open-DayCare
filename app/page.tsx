@@ -2,6 +2,8 @@
 
 import type { SVGProps } from "react";
 import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
+import RequireAuth from "@/app/components/require-auth";
+import { useSession } from "@/app/lib/session";
 
 function CameraIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -276,7 +278,7 @@ function ComposeCard() {
   );
 }
 
-function FeedColumn() {
+function FeedColumn({ firstName }: { firstName: string }) {
   return (
     <div className="w-full max-w-[760px] mx-auto py-[34px] px-6 sm:px-10 pb-20">
       <div className="mb-6">
@@ -294,7 +296,7 @@ function FeedColumn() {
             fontSize: 30,
           }}
         >
-          Hi, Caro
+          Hi, {firstName}
         </h1>
         <p className="mt-[5px] mb-0 text-muted-2 text-[14.5px]">
           12 kids · Tuesday, Jun 17
@@ -445,13 +447,17 @@ function FeedColumn() {
 }
 
 export default function Home() {
+  const session = useSession();
+
   return (
-    <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
-      <Sidebar activeItem="feed" />
-      <main className="flex-1 min-w-0 h-screen overflow-y-auto">
-        <MobileTopBar activeItem="feed" />
-        <FeedColumn />
-      </main>
-    </div>
+    <RequireAuth>
+      <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
+        <Sidebar activeItem="feed" />
+        <main className="flex-1 min-w-0 h-screen overflow-y-auto">
+          <MobileTopBar activeItem="feed" />
+          <FeedColumn firstName={session?.firstName ?? "Caro"} />
+        </main>
+      </div>
+    </RequireAuth>
   );
 }

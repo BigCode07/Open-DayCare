@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createSession } from "@/app/lib/session";
 
 export default function ActivatePage() {
   const router = useRouter();
@@ -54,6 +55,7 @@ export default function ActivatePage() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
+      createSession("lucia.fernandez@gmail.com");
       router.push("/");
     }
   };

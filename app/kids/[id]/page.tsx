@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
 import { KIDS_SEED } from "../page";
+import RequireAuth from "@/app/components/require-auth";
 
 function ChevronLeft() {
   return (
@@ -164,19 +165,21 @@ export default function KidProfilePage() {
 
   if (!kid) {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: "#F6ECDF" }}>
-        <div className="text-center">
-          <h1
-            className="text-2xl text-ink mb-2"
-            style={{ fontFamily: "var(--font-fredoka)", fontWeight: 600 }}
-          >
-            Child not found
-          </h1>
-          <Link href="/kids" className="text-coral-strong font-bold">
-            Back to Kids
-          </Link>
+      <RequireAuth>
+        <div className="flex min-h-screen items-center justify-center" style={{ background: "#F6ECDF" }}>
+          <div className="text-center">
+            <h1
+              className="text-2xl text-ink mb-2"
+              style={{ fontFamily: "var(--font-fredoka)", fontWeight: 600 }}
+            >
+              Child not found
+            </h1>
+            <Link href="/kids" className="text-coral-strong font-bold">
+              Back to Kids
+            </Link>
+          </div>
         </div>
-      </div>
+      </RequireAuth>
     );
   }
 
@@ -186,11 +189,12 @@ export default function KidProfilePage() {
       : kid.notes || "No allergies or medical notes.";
 
   return (
-    <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
-      <Sidebar activeItem="kids" />
-      <main className="flex-1 min-w-0 h-screen overflow-y-auto">
-        <MobileTopBar activeItem="kids" />
-        <div className="w-full max-w-[820px] mx-auto py-[34px] px-6 sm:px-10 pb-20">
+    <RequireAuth>
+      <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
+        <Sidebar activeItem="kids" />
+        <main className="flex-1 min-w-0 h-screen overflow-y-auto">
+          <MobileTopBar activeItem="kids" />
+          <div className="w-full max-w-[820px] mx-auto py-[34px] px-6 sm:px-10 pb-20">
           <Link
             href="/kids"
             className="flex items-center gap-[7px] text-muted-2 font-bold text-[14px] mb-5"
@@ -344,7 +348,8 @@ export default function KidProfilePage() {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </RequireAuth>
   );
 }

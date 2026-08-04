@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
 import AddKidModal from "@/app/components/add-kid-modal";
+import RequireAuth from "@/app/components/require-auth";
 
 export type Kid = {
   id: string;
@@ -277,106 +278,108 @@ export default function KidsPage() {
   };
 
   return (
-    <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
-      <Sidebar activeItem="kids" />
-      <main className="flex-1 min-w-0 h-screen overflow-y-auto">
-        <MobileTopBar activeItem="kids" actionLabel="Add child" onAction={() => setModalOpen(true)} />
-        <div className="w-full max-w-[880px] mx-auto py-[34px] px-6 sm:px-10 pb-20">
-          <div className="flex items-end justify-between gap-4 mb-[22px]">
-            <div>
-              <div
-                className="text-[12.5px] font-extrabold text-coral-strong"
-                style={{ letterSpacing: ".8px", marginBottom: 4 }}
-              >
-                MANAGEMENT
+    <RequireAuth>
+      <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
+        <Sidebar activeItem="kids" />
+        <main className="flex-1 min-w-0 h-screen overflow-y-auto">
+          <MobileTopBar activeItem="kids" actionLabel="Add child" onAction={() => setModalOpen(true)} />
+          <div className="w-full max-w-[880px] mx-auto py-[34px] px-6 sm:px-10 pb-20">
+            <div className="flex items-end justify-between gap-4 mb-[22px]">
+              <div>
+                <div
+                  className="text-[12.5px] font-extrabold text-coral-strong"
+                  style={{ letterSpacing: ".8px", marginBottom: 4 }}
+                >
+                  MANAGEMENT
+                </div>
+                <h1
+                  className="m-0 text-ink"
+                  style={{
+                    fontFamily: "var(--font-fredoka)",
+                    fontWeight: 600,
+                    fontSize: 30,
+                  }}
+                >
+                  Kids
+                </h1>
               </div>
-              <h1
-                className="m-0 text-ink"
+              <button
+                onClick={() => setModalOpen(true)}
+                className="hidden md:flex items-center gap-2 px-[18px] py-[11px] rounded-[14px] text-white border-none cursor-pointer"
                 style={{
-                  fontFamily: "var(--font-fredoka)",
-                  fontWeight: 600,
-                  fontSize: 30,
+                  background: "linear-gradient(180deg,#F4977E,#EE8164)",
+                  fontWeight: 800,
+                  fontSize: 14.5,
+                  boxShadow: "0 8px 18px -8px rgba(238,129,100,.7)",
+                  fontFamily: "inherit",
                 }}
               >
-                Kids
-              </h1>
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Add child
+              </button>
             </div>
-            <button
-              onClick={() => setModalOpen(true)}
-              className="hidden md:flex items-center gap-2 px-[18px] py-[11px] rounded-[14px] text-white border-none cursor-pointer"
-              style={{
-                background: "linear-gradient(180deg,#F4977E,#EE8164)",
-                fontWeight: 800,
-                fontSize: 14.5,
-                boxShadow: "0 8px 18px -8px rgba(238,129,100,.7)",
-                fontFamily: "inherit",
-              }}
+
+            <div
+              className="flex items-center gap-[11px] px-4 py-3 rounded-[14px] mb-[22px]"
+              style={{ background: "#FFFDF9", border: "1px solid #ECE0D0" }}
             >
               <svg
-                width="17"
-                height="17"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#fff"
-                strokeWidth="2.4"
+                stroke="#B0A290"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M12 5v14M5 12h14" />
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.3-4.3" />
               </svg>
-              Add child
-            </button>
-          </div>
+              <input
+                type="text"
+                placeholder="Search child..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 border-none bg-transparent text-[15px] text-ink placeholder:text-[#B6A99B] focus:outline-none"
+                style={{ fontFamily: "inherit" }}
+              />
+            </div>
 
-          <div
-            className="flex items-center gap-[11px] px-4 py-3 rounded-[14px] mb-[22px]"
-            style={{ background: "#FFFDF9", border: "1px solid #ECE0D0" }}
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#B0A290"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search child..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 border-none bg-transparent text-[15px] text-ink placeholder:text-[#B6A99B] focus:outline-none"
-              style={{ fontFamily: "inherit" }}
-            />
-          </div>
+            <div className="flex items-center gap-3 mb-[14px]">
+              <span
+                className="text-[12.5px] font-extrabold text-ink"
+                style={{ letterSpacing: ".8px" }}
+              >
+                ROOM SOLES
+              </span>
+              <span className="text-[13px] text-muted">
+                {filteredKids.length}{" "}
+                {filteredKids.length === 1 ? "child" : "children"}
+              </span>
+              <span className="flex-1 h-px" style={{ background: "#E7DAC8" }} />
+            </div>
 
-          <div className="flex items-center gap-3 mb-[14px]">
-            <span
-              className="text-[12.5px] font-extrabold text-ink"
-              style={{ letterSpacing: ".8px" }}
-            >
-              ROOM SOLES
-            </span>
-            <span className="text-[13px] text-muted">
-              {filteredKids.length}{" "}
-              {filteredKids.length === 1 ? "child" : "children"}
-            </span>
-            <span className="flex-1 h-px" style={{ background: "#E7DAC8" }} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-[14px]">
+              {filteredKids.map((kid) => (
+                <KidCard key={kid.id} kid={kid} />
+              ))}
+            </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[14px]">
-            {filteredKids.map((kid) => (
-              <KidCard key={kid.id} kid={kid} />
-            ))}
-          </div>
-        </div>
-      </main>
-      <AddKidModal open={modalOpen} onClose={() => setModalOpen(false)} onSaved={handleKidSaved} />
-    </div>
+        </main>
+        <AddKidModal open={modalOpen} onClose={() => setModalOpen(false)} onSaved={handleKidSaved} />
+      </div>
+    </RequireAuth>
   );
 }

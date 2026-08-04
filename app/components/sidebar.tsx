@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { SVGProps } from "react";
+import { clearSession, useSession, type Session } from "@/app/lib/session";
 
 type NavItem = "feed" | "kids" | "avisos" | "cuenta";
 
@@ -275,7 +277,13 @@ function SidebarNav({ activeItem }: { activeItem: NavItem }) {
   );
 }
 
-function SidebarUser() {
+function SidebarUser({
+  session,
+  onLogout,
+}: {
+  session: Session | null;
+  onLogout: () => void;
+}) {
   return (
     <div
       className="border-t pt-[14px] mt-[10px]"
@@ -295,17 +303,20 @@ function SidebarUser() {
             fontSize: 16,
           }}
         >
-          C
+          {session?.initial ?? "C"}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[14px] font-extrabold text-ink">Caro Giménez</div>
-          <div className="text-[12px] text-muted">Teacher · Soles</div>
+          <div className="text-[14px] font-extrabold text-ink">
+            {session?.name ?? "Caro Giménez"}
+          </div>
+          <div className="text-[12px] text-muted">
+            {session?.roleLabel ?? "Teacher · Soles"}
+          </div>
         </div>
-        <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
+        <button
+          onClick={onLogout}
           title="Log out"
-          className="flex items-center justify-center flex-none"
+          className="flex items-center justify-center flex-none cursor-pointer border-none"
           style={{
             width: 32,
             height: 32,
@@ -315,13 +326,21 @@ function SidebarUser() {
           }}
         >
           <LogoutIcon />
-        </a>
+        </button>
       </div>
     </div>
   );
 }
 
 export function Sidebar({ activeItem }: { activeItem: NavItem }) {
+  const router = useRouter();
+  const session = useSession();
+
+  const handleLogout = () => {
+    clearSession();
+    router.push("/login");
+  };
+
   return (
     <aside
       className="hidden md:flex flex-col px-4 py-6 sticky top-0 h-screen flex-none"
@@ -334,7 +353,7 @@ export function Sidebar({ activeItem }: { activeItem: NavItem }) {
       <SidebarBrand />
       <SidebarNewPost />
       <SidebarNav activeItem={activeItem} />
-      <SidebarUser />
+      <SidebarUser session={session} onLogout={handleLogout} />
     </aside>
   );
 }
@@ -348,7 +367,13 @@ export function MobileTopBar({
   actionLabel?: string;
   onAction?: () => void;
 }) {
+  const router = useRouter();
   const isKids = activeItem === "kids";
+
+  const handleLogout = () => {
+    clearSession();
+    router.push("/login");
+  };
 
   return (
     <div
@@ -367,38 +392,54 @@ export function MobileTopBar({
           OpenDayCare
         </div>
       </Link>
-      {isKids && onAction ? (
+      <div className="flex items-center gap-2.5">
+        {isKids && onAction ? (
+          <button
+            onClick={onAction}
+            className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white border-none cursor-pointer"
+            style={{
+              background: "linear-gradient(180deg,#F4977E,#EE8164)",
+              fontWeight: 800,
+              fontSize: 13.5,
+              boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
+              fontFamily: "inherit",
+            }}
+          >
+            <PlusIcon />
+            {actionLabel || "Add child"}
+          </button>
+        ) : (
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white"
+            style={{
+              background: "linear-gradient(180deg,#F4977E,#EE8164)",
+              fontWeight: 800,
+              fontSize: 13.5,
+              boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
+              textDecoration: "none",
+            }}
+          >
+            <PlusIcon />
+            {actionLabel || "New post"}
+          </a>
+        )}
         <button
-          onClick={onAction}
-          className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white border-none cursor-pointer"
+          onClick={handleLogout}
+          title="Log out"
+          className="flex items-center justify-center flex-none cursor-pointer border-none"
           style={{
-            background: "linear-gradient(180deg,#F4977E,#EE8164)",
-            fontWeight: 800,
-            fontSize: 13.5,
-            boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
-            fontFamily: "inherit",
+            width: 36,
+            height: 36,
+            borderRadius: 12,
+            background: "#F6ECDF",
+            color: "#94887B",
           }}
         >
-          <PlusIcon />
-          {actionLabel || "Add child"}
+          <LogoutIcon />
         </button>
-      ) : (
-        <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
-          className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white"
-          style={{
-            background: "linear-gradient(180deg,#F4977E,#EE8164)",
-            fontWeight: 800,
-            fontSize: 13.5,
-            boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
-            textDecoration: "none",
-          }}
-        >
-          <PlusIcon />
-          {actionLabel || "New post"}
-        </a>
-      )}
+      </div>
     </div>
   );
 }
