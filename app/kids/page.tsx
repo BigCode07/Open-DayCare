@@ -262,17 +262,6 @@ export default function KidsPage() {
   const [extraKids, setExtraKids] = useState<Kid[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Load any kids added via sessionStorage
-  if (typeof window !== "undefined") {
-    const stored = sessionStorage.getItem("newKids");
-    if (stored) {
-      const parsed: Kid[] = JSON.parse(stored);
-      if (parsed.length !== extraKids.length) {
-        setExtraKids(parsed);
-      }
-    }
-  }
-
   const allKids = [...KIDS_SEED, ...extraKids];
 
   const filteredKids = allKids.filter((kid) => {
@@ -283,12 +272,8 @@ export default function KidsPage() {
     );
   });
 
-  const handleSaved = (kid: Kid) => {
+  const handleKidSaved = (kid: Kid) => {
     setExtraKids((prev) => [...prev, kid]);
-    const stored = sessionStorage.getItem("newKids");
-    const newKids: Kid[] = stored ? JSON.parse(stored) : [];
-    newKids.push(kid);
-    sessionStorage.setItem("newKids", JSON.stringify(newKids));
   };
 
   return (
@@ -317,7 +302,6 @@ export default function KidsPage() {
               </h1>
             </div>
             <button
-              type="button"
               onClick={() => setModalOpen(true)}
               className="hidden md:flex items-center gap-2 px-[18px] py-[11px] rounded-[14px] text-white border-none cursor-pointer"
               style={{
@@ -392,7 +376,7 @@ export default function KidsPage() {
           </div>
         </div>
       </main>
-      <AddKidModal open={modalOpen} onClose={() => setModalOpen(false)} onSaved={handleSaved} />
+      <AddKidModal open={modalOpen} onClose={() => setModalOpen(false)} onSaved={handleKidSaved} />
     </div>
   );
 }

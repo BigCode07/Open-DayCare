@@ -342,12 +342,10 @@ export function Sidebar({ activeItem }: { activeItem: NavItem }) {
 export function MobileTopBar({
   activeItem,
   actionLabel,
-  actionHref,
   onAction,
 }: {
   activeItem: NavItem;
   actionLabel?: string;
-  actionHref?: string;
   onAction?: () => void;
 }) {
   const isKids = activeItem === "kids";
@@ -369,12 +367,9 @@ export function MobileTopBar({
           OpenDayCare
         </div>
       </Link>
-      {isKids && (actionHref || onAction) ? (
+      {isKids && onAction ? (
         <button
-          type="button"
-          onClick={() => {
-            if (onAction) onAction();
-          }}
+          onClick={onAction}
           className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white border-none cursor-pointer"
           style={{
             background: "linear-gradient(180deg,#F4977E,#EE8164)",
