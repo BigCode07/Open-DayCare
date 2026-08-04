@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
+import AddKidModal from "@/app/components/add-kid-modal";
 
 export type Kid = {
   id: string;
@@ -259,17 +260,7 @@ function KidCard({ kid }: { kid: Kid }) {
 export default function KidsPage() {
   const [search, setSearch] = useState("");
   const [extraKids, setExtraKids] = useState<Kid[]>([]);
-
-  // Load any kids added via /kids/new from sessionStorage
-  if (typeof window !== "undefined") {
-    const stored = sessionStorage.getItem("newKids");
-    if (stored) {
-      const parsed: Kid[] = JSON.parse(stored);
-      if (parsed.length !== extraKids.length) {
-        setExtraKids(parsed);
-      }
-    }
-  }
+  const [modalOpen, setModalOpen] = useState(false);
 
   const allKids = [...KIDS_SEED, ...extraKids];
 
@@ -281,11 +272,15 @@ export default function KidsPage() {
     );
   });
 
+  const handleKidSaved = (kid: Kid) => {
+    setExtraKids((prev) => [...prev, kid]);
+  };
+
   return (
     <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
       <Sidebar activeItem="kids" />
       <main className="flex-1 min-w-0 h-screen overflow-y-auto">
-        <MobileTopBar activeItem="kids" actionLabel="Add child" actionHref="/kids/new" />
+        <MobileTopBar activeItem="kids" actionLabel="Add child" onAction={() => setModalOpen(true)} />
         <div className="w-full max-w-[880px] mx-auto py-[34px] px-6 sm:px-10 pb-20">
           <div className="flex items-end justify-between gap-4 mb-[22px]">
             <div>
@@ -306,15 +301,15 @@ export default function KidsPage() {
                 Kids
               </h1>
             </div>
-            <Link
-              href="/kids/new"
-              className="hidden md:flex items-center gap-2 px-[18px] py-[11px] rounded-[14px] text-white"
+            <button
+              onClick={() => setModalOpen(true)}
+              className="hidden md:flex items-center gap-2 px-[18px] py-[11px] rounded-[14px] text-white border-none cursor-pointer"
               style={{
                 background: "linear-gradient(180deg,#F4977E,#EE8164)",
                 fontWeight: 800,
                 fontSize: 14.5,
                 boxShadow: "0 8px 18px -8px rgba(238,129,100,.7)",
-                textDecoration: "none",
+                fontFamily: "inherit",
               }}
             >
               <svg
@@ -330,7 +325,7 @@ export default function KidsPage() {
                 <path d="M12 5v14M5 12h14" />
               </svg>
               Add child
-            </Link>
+            </button>
           </div>
 
           <div
@@ -381,6 +376,7 @@ export default function KidsPage() {
           </div>
         </div>
       </main>
+      <AddKidModal open={modalOpen} onClose={() => setModalOpen(false)} onSaved={handleKidSaved} />
     </div>
   );
 }

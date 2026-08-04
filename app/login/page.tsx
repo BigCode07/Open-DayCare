@@ -4,25 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-type Role = "staff" | "family";
-
 export default function LoginPage() {
   const router = useRouter();
-  const [role, setRole] = useState<Role>("staff");
-  const [email, setEmail] = useState("caro@opendaycare.com");
+  const [email, setEmail] = useState("lucia.fernandez@gmail.com");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
-
-  const handleRoleChange = (newRole: Role) => {
-    setRole(newRole);
-    setEmail(
-      newRole === "staff"
-        ? "caro@opendaycare.com"
-        : "lucia.fernandez@gmail.com"
-    );
-  };
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -104,61 +92,6 @@ export default function LoginPage() {
           <p className="mb-7 text-muted-2 text-sm">
             Ingresá para ver el día de hoy.
           </p>
-
-          <div className="text-xs font-bold tracking-wide text-muted-2 mb-2">
-            INGRESO COMO
-          </div>
-          <div className="flex gap-2.5 mb-5">
-            <button
-              type="button"
-              onClick={() => handleRoleChange("staff")}
-              className={`flex-1 flex items-center gap-2 py-3 px-3.5 rounded-xl border-[1.5px] font-bold text-sm transition-all ${
-                role === "staff"
-                  ? "bg-coral-tint border-coral-border text-coral-strong"
-                  : "bg-white border-input-border text-muted-3"
-              }`}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-              Personal
-            </button>
-            <button
-              type="button"
-              onClick={() => handleRoleChange("family")}
-              className={`flex-1 flex items-center gap-2 py-3 px-3.5 rounded-xl border-[1.5px] font-bold text-sm transition-all ${
-                role === "family"
-                  ? "bg-coral-tint border-coral-border text-coral-strong"
-                  : "bg-white border-input-border text-muted-3"
-              }`}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              Familia
-            </button>
-          </div>
 
           <div className="text-xs font-bold tracking-wide text-muted-2 mb-2">
             EMAIL
