@@ -1,9 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
+import LinkParentModal from "@/app/components/link-parent-modal";
+import type { NewParent } from "@/app/components/link-parent-modal";
 import { KIDS_SEED } from "../page";
+
+type LinkedParent = { name: string; role: string; status: "Active" | "Pending" };
 
 function ChevronLeft() {
   return (
@@ -161,6 +166,9 @@ export default function KidProfilePage() {
   const params = useParams();
   const kidId = params.id as string;
   const kid = KIDS_SEED.find((k) => k.id === kidId);
+  const [parentModalOpen, setParentModalOpen] = useState(false);
+  const [parentsByKid, setParentsByKid] = useState<Record<string, LinkedParent[]>>({});
+  const parents = parentsByKid[kidId] ?? kid?.parentStatus ?? [];
 
   if (!kid) {
     return (
@@ -184,6 +192,14 @@ export default function KidProfilePage() {
     kid.allergies.length > 0
       ? `Allergic to ${kid.allergies.join(" and ").toLowerCase()}. ${kid.notes}`
       : kid.notes || "No allergies or medical notes.";
+
+  const handleParentSubmitted = (parent: NewParent) => {
+    setParentsByKid((prev) => ({
+      ...prev,
+      [kidId]: [...(prev[kidId] ?? kid?.parentStatus ?? []), parent],
+    }));
+    setParentModalOpen(false);
+  };
 
   return (
     <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
@@ -305,10 +321,10 @@ export default function KidProfilePage() {
                   LINKED PARENTS
                 </div>
                 <div className="flex flex-col gap-[14px]">
-                  {kid.parentStatus && kid.parentStatus.length > 0 ? (
-                    kid.parentStatus.map((parent) => (
+                  {parents.length > 0 ? (
+                    parents.map((parent, index) => (
                       <ParentRow
-                        key={parent.name}
+                        key={`${parent.name}-${index}`}
                         name={parent.name}
                         role={parent.role}
                         status={parent.status}
@@ -317,11 +333,10 @@ export default function KidProfilePage() {
                   ) : (
                     <div className="text-[13px] text-muted">No parents linked yet.</div>
                   )}
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="flex items-center gap-3 pt-2"
-                    style={{ textDecoration: "none" }}
+                  <button
+                    onClick={() => setParentModalOpen(true)}
+                    className="flex items-center gap-3 pt-2 bg-transparent border-none cursor-pointer p-0"
+                    style={{ fontFamily: "inherit", textAlign: "left" }}
                   >
                     <span
                       className="flex items-center justify-center flex-none"
@@ -338,13 +353,19 @@ export default function KidProfilePage() {
                     <span className="font-extrabold text-[14.5px]" style={{ color: "#C5503A" }}>
                       Link another parent
                     </span>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </main>
+      <LinkParentModal
+        open={parentModalOpen}
+        onClose={() => setParentModalOpen(false)}
+        kidName={`${kid.firstName} ${kid.lastName}`}
+        onSubmitted={handleParentSubmitted}
+      />
     </div>
   );
 }
