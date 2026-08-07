@@ -14,7 +14,7 @@ const POST_TYPES = [
 ];
 
 export type NewPostDraft = {
-  kidId: string | null;
+  kidIds: string[];
   text: string;
 };
 
@@ -29,17 +29,23 @@ export default function CreatePostModal({
   kids: Kid[];
   onSubmitted: (draft: NewPostDraft) => void;
 }) {
-  const [kidId, setKidId] = useState<string | null>(kids[0]?.id ?? null);
+  const [kidIds, setKidIds] = useState<string[]>([]);
   const [postType, setPostType] = useState<string>("Activity");
   const [text, setText] = useState("");
   const [error, setError] = useState<string | undefined>();
 
   const reset = useCallback(() => {
-    setKidId(kids[0]?.id ?? null);
+    setKidIds([]);
     setPostType("Activity");
     setText("");
     setError(undefined);
-  }, [kids]);
+  }, []);
+
+  const toggleKid = (id: string) => {
+    setKidIds((prev) =>
+      prev.includes(id) ? prev.filter((kidId) => kidId !== id) : [...prev, id],
+    );
+  };
 
   const handleClose = useCallback(() => {
     reset();
@@ -63,7 +69,7 @@ export default function CreatePostModal({
       return;
     }
     setError(undefined);
-    onSubmitted({ kidId, text: text.trim() });
+    onSubmitted({ kidIds, text: text.trim() });
     reset();
   };
 
@@ -117,11 +123,11 @@ export default function CreatePostModal({
           </span>
           <div className="flex flex-wrap gap-[9px] mb-[22px]">
             {kids.map((kid) => {
-              const active = kidId === kid.id;
+              const active = kidIds.includes(kid.id);
               return (
                 <button
                   key={kid.id}
-                  onClick={() => setKidId(kid.id)}
+                  onClick={() => toggleKid(kid.id)}
                   className="flex items-center gap-2 rounded-full font-bold text-[14px] cursor-pointer"
                   style={{
                     padding: "6px 14px 6px 6px",
@@ -153,13 +159,13 @@ export default function CreatePostModal({
               );
             })}
             <button
-              onClick={() => setKidId(null)}
+              onClick={() => setKidIds([])}
               className="rounded-full font-bold text-[14px] cursor-pointer"
               style={{
                 padding: "6px 16px",
-                border: kidId === null ? "1.5px solid #3F362E" : "1.5px solid #ECE0D0",
-                background: kidId === null ? "#3F362E" : "#FFFDF9",
-                color: kidId === null ? "#fff" : "#6E6359",
+                border: kidIds.length === 0 ? "1.5px solid #3F362E" : "1.5px solid #ECE0D0",
+                background: kidIds.length === 0 ? "#3F362E" : "#FFFDF9",
+                color: kidIds.length === 0 ? "#fff" : "#6E6359",
                 fontFamily: "inherit",
               }}
             >
