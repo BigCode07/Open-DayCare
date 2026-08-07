@@ -1,7 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import type { SVGProps } from "react";
 import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
+import CreatePostModal, { type NewPostDraft } from "@/app/components/create-post-modal";
+import { KIDS_SEED } from "@/app/kids/page";
+
+type NewPost = {
+  id: string;
+  kidId: string | null;
+  text: string;
+};
 
 function CameraIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -246,6 +255,60 @@ function PostFooter({ likes, comments }: { likes: number; comments: number }) {
   );
 }
 
+function DynamicPost({ post }: { post: NewPost }) {
+  const kid = KIDS_SEED.find((k) => k.id === post.kidId) ?? null;
+
+  return (
+    <PostCard>
+      <PostHeader
+        avatarLetter={kid?.initial ?? ""}
+        avatarBg={kid?.avatarColor ?? "#CCD8F4"}
+        avatarColor={kid?.avatarTextColor ?? "#4E72C8"}
+        title={kid ? kid.firstName : "General notice"}
+        subtitle="Now · posted by you"
+        badge={
+          <PostBadge
+            label="ACTIVITY"
+            bgColor="#CFEBD8"
+            dotColor="#3E9B6C"
+            textColor="#3E9B6C"
+          />
+        }
+        avatarOverride={
+          kid ? undefined : (
+            <div
+              className="flex items-center justify-center flex-none"
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: "50%",
+                background: "#CCD8F4",
+                color: "#4E72C8",
+              }}
+            >
+              <AnuncioAvatarIcon />
+            </div>
+          )
+        }
+      />
+      <div className="text-[12.5px] text-muted mb-[10px]">
+        {kid ? `For: ${kid.firstName}'s family` : "For: the whole room"}
+      </div>
+      <p
+        className="m-0"
+        style={{
+          fontSize: 15.5,
+          lineHeight: 1.55,
+          color: "#4A4038",
+        }}
+      >
+        {post.text}
+      </p>
+      <PostFooter likes={0} comments={0} />
+    </PostCard>
+  );
+}
+
 function ComposeCard() {
   return (
     <a
@@ -276,7 +339,7 @@ function ComposeCard() {
   );
 }
 
-function FeedColumn() {
+function FeedColumn({ newPosts }: { newPosts: NewPost[] }) {
   return (
     <div className="w-full max-w-[760px] mx-auto py-[34px] px-6 sm:px-10 pb-20">
       <div className="mb-6">
@@ -314,6 +377,9 @@ function FeedColumn() {
       </div>
 
       <div className="flex flex-col gap-4">
+        {newPosts.map((post) => (
+          <DynamicPost key={post.id} post={post} />
+        ))}
         <PostCard>
           <PostHeader
             avatarLetter="M"
@@ -445,13 +511,30 @@ function FeedColumn() {
 }
 
 export default function Home() {
+  const [postModalOpen, setPostModalOpen] = useState(false);
+  const [newPosts, setNewPosts] = useState<NewPost[]>([]);
+
+  const handlePostSubmitted = (draft: NewPostDraft) => {
+    setNewPosts((prev) => [
+      { id: `new-${Date.now()}`, kidId: draft.kidId, text: draft.text },
+      ...prev,
+    ]);
+    setPostModalOpen(false);
+  };
+
   return (
     <div className="flex min-h-screen" style={{ background: "#F6ECDF" }}>
-      <Sidebar activeItem="feed" />
+      <Sidebar activeItem="feed" onNewPost={() => setPostModalOpen(true)} />
       <main className="flex-1 min-w-0 h-screen overflow-y-auto">
-        <MobileTopBar activeItem="feed" />
-        <FeedColumn />
+        <MobileTopBar activeItem="feed" onAction={() => setPostModalOpen(true)} />
+        <FeedColumn newPosts={newPosts} />
       </main>
+      <CreatePostModal
+        open={postModalOpen}
+        onClose={() => setPostModalOpen(false)}
+        kids={KIDS_SEED}
+        onSubmitted={handlePostSubmitted}
+      />
     </div>
   );
 }

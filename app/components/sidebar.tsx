@@ -172,21 +172,41 @@ function SidebarBrand() {
   );
 }
 
-function SidebarNewPost() {
+function SidebarNewPost({ onNewPost }: { onNewPost?: () => void }) {
+  const style = {
+    background: "linear-gradient(180deg,#F4977E,#EE8164)",
+    fontWeight: 800,
+    fontSize: 14.5,
+    boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
+  } as const;
+
+  const content = (
+    <>
+      <PlusIcon />
+      New post
+    </>
+  );
+
+  if (onNewPost) {
+    return (
+      <button
+        onClick={onNewPost}
+        className="flex items-center justify-center gap-2 w-full py-3 rounded-[14px] text-white mb-[18px] border-none cursor-pointer"
+        style={{ ...style, fontFamily: "inherit" }}
+      >
+        {content}
+      </button>
+    );
+  }
+
   return (
     <a
       href="#"
       onClick={(e) => e.preventDefault()}
       className="flex items-center justify-center gap-2 w-full py-3 rounded-[14px] text-white mb-[18px]"
-      style={{
-        background: "linear-gradient(180deg,#F4977E,#EE8164)",
-        fontWeight: 800,
-        fontSize: 14.5,
-        boxShadow: "0 8px 18px -8px rgba(238,129,100,.75)",
-      }}
+      style={style}
     >
-      <PlusIcon />
-      New post
+      {content}
     </a>
   );
 }
@@ -321,7 +341,7 @@ function SidebarUser() {
   );
 }
 
-export function Sidebar({ activeItem }: { activeItem: NavItem }) {
+export function Sidebar({ activeItem, onNewPost }: { activeItem: NavItem; onNewPost?: () => void }) {
   return (
     <aside
       className="hidden md:flex flex-col px-4 py-6 sticky top-0 h-screen flex-none"
@@ -332,7 +352,7 @@ export function Sidebar({ activeItem }: { activeItem: NavItem }) {
       }}
     >
       <SidebarBrand />
-      <SidebarNewPost />
+      <SidebarNewPost onNewPost={onNewPost} />
       <SidebarNav activeItem={activeItem} />
       <SidebarUser />
     </aside>
@@ -367,7 +387,7 @@ export function MobileTopBar({
           OpenDayCare
         </div>
       </Link>
-      {isKids && onAction ? (
+      {onAction ? (
         <button
           onClick={onAction}
           className="flex items-center justify-center gap-2 px-3 py-2 rounded-[14px] text-white border-none cursor-pointer"
@@ -380,7 +400,7 @@ export function MobileTopBar({
           }}
         >
           <PlusIcon />
-          {actionLabel || "Add child"}
+          {actionLabel || (isKids ? "Add child" : "New post")}
         </button>
       ) : (
         <a
