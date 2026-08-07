@@ -8,7 +8,7 @@ import { KIDS_SEED } from "@/app/kids/page";
 
 type NewPost = {
   id: string;
-  kidId: string | null;
+  kidIds: string[];
   text: string;
 };
 
@@ -256,15 +256,23 @@ function PostFooter({ likes, comments }: { likes: number; comments: number }) {
 }
 
 function DynamicPost({ post }: { post: NewPost }) {
-  const kid = KIDS_SEED.find((k) => k.id === post.kidId) ?? null;
+  const kids = KIDS_SEED.filter((k) => post.kidIds.includes(k.id));
+  const primary = kids[0] ?? null;
+
+  const forLabel =
+    kids.length === 0
+      ? "For: the whole room"
+      : `For: ${kids.map((k) => k.firstName).join(", ")}`;
 
   return (
     <PostCard>
       <PostHeader
-        avatarLetter={kid?.initial ?? ""}
-        avatarBg={kid?.avatarColor ?? "#CCD8F4"}
-        avatarColor={kid?.avatarTextColor ?? "#4E72C8"}
-        title={kid ? kid.firstName : "General notice"}
+        avatarLetter={primary?.initial ?? ""}
+        avatarBg={primary?.avatarColor ?? "#CCD8F4"}
+        avatarColor={primary?.avatarTextColor ?? "#4E72C8"}
+        title={
+          kids.length === 0 ? "General notice" : kids.map((k) => k.firstName).join(", ")
+        }
         subtitle="Now · posted by you"
         badge={
           <PostBadge
@@ -275,7 +283,7 @@ function DynamicPost({ post }: { post: NewPost }) {
           />
         }
         avatarOverride={
-          kid ? undefined : (
+          kids.length === 0 ? (
             <div
               className="flex items-center justify-center flex-none"
               style={{
@@ -288,11 +296,11 @@ function DynamicPost({ post }: { post: NewPost }) {
             >
               <AnuncioAvatarIcon />
             </div>
-          )
+          ) : undefined
         }
       />
       <div className="text-[12.5px] text-muted mb-[10px]">
-        {kid ? `For: ${kid.firstName}'s family` : "For: the whole room"}
+        {forLabel}
       </div>
       <p
         className="m-0"
@@ -516,7 +524,7 @@ export default function Home() {
 
   const handlePostSubmitted = (draft: NewPostDraft) => {
     setNewPosts((prev) => [
-      { id: `new-${Date.now()}`, kidId: draft.kidId, text: draft.text },
+      { id: `new-${Date.now()}`, kidIds: draft.kidIds, text: draft.text },
       ...prev,
     ]);
     setPostModalOpen(false);
