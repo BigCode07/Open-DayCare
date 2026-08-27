@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { SVGProps } from "react";
+import { signOut } from "@/app/actions";
 
 type NavItem = "feed" | "kids" | "avisos" | "cuenta";
 
@@ -321,21 +322,23 @@ function SidebarUser() {
           <div className="text-[14px] font-extrabold text-ink">Caro Giménez</div>
           <div className="text-[12px] text-muted">Teacher · Soles</div>
         </div>
-        <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
-          title="Log out"
-          className="flex items-center justify-center flex-none"
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 10,
-            background: "#F6ECDF",
-            color: "#94887B",
-          }}
-        >
-          <LogoutIcon />
-        </a>
+        <form action={signOut}>
+          <button
+            type="submit"
+            title="Cerrar sesión"
+            aria-label="Cerrar sesión"
+            className="flex items-center justify-center flex-none border-none cursor-pointer"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 10,
+              background: "#F6ECDF",
+              color: "#94887B",
+            }}
+          >
+            <LogoutIcon />
+          </button>
+        </form>
       </div>
     </div>
   );

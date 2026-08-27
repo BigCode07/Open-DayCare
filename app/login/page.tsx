@@ -1,24 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useState } from "react";
 import Link from "next/link";
+import { login, type LoginState } from "./actions";
+
+const initialState: LoginState = {};
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
+  const [state, formAction, isPending] = useActionState(login, initialState);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const newErrors: { email?: string; password?: string } = {};
 
     if (!email) {
@@ -35,8 +36,8 @@ export default function LoginPage() {
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      router.push("/");
+    if (Object.keys(newErrors).length > 0) {
+      e.preventDefault();
     }
   };
 
@@ -85,7 +86,11 @@ export default function LoginPage() {
       </div>
 
       <div className="flex items-center justify-center p-6 md:p-10">
-        <div className="w-full max-w-md">
+        <form
+          className="w-full max-w-md"
+          action={formAction}
+          onSubmit={handleSubmit}
+        >
           <h2 className="font-display font-semibold text-3xl mb-1.5 text-ink">
             Iniciar sesión
           </h2>
@@ -98,6 +103,7 @@ export default function LoginPage() {
           </div>
           <input
             type="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full py-3.5 px-4 rounded-xl border-[1.5px] border-input-border bg-white text-base text-ink mb-4"
@@ -111,6 +117,7 @@ export default function LoginPage() {
           </div>
           <input
             type="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
@@ -131,10 +138,14 @@ export default function LoginPage() {
             </Link>
           </div>
 
+          {state.error && (
+            <div className="text-coral-dark text-sm mb-3">{state.error}</div>
+          )}
+
           <button
-            type="button"
-            onClick={handleSubmit}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-b from-coral to-coral-deep text-white font-extrabold text-base shadow-lg shadow-coral-deep/30"
+            type="submit"
+            disabled={isPending}
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-b from-coral to-coral-deep text-white font-extrabold text-base shadow-lg shadow-coral-deep/30 disabled:opacity-60"
           >
             Iniciar sesión
           </button>
@@ -145,7 +156,7 @@ export default function LoginPage() {
               Activá tu cuenta
             </Link>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   );
