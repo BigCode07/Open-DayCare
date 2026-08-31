@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar, MobileTopBar } from "@/app/components/sidebar";
 import LinkParentModal from "@/app/components/link-parent-modal";
-import type { NewParent } from "@/app/components/link-parent-modal";
-import type { Kid } from "@/lib/kids";
-
-type LinkedParent = { name: string; role: string; status: "Active" | "Pending" };
+import { resendInvitation } from "@/app/kids/actions";
+import type { Kid, ParentLink } from "@/lib/kids";
 
 function ChevronLeft() {
   return (
@@ -79,6 +78,24 @@ function PlusIcon() {
   );
 }
 
+function RefreshIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+      <path d="M21 3v6h-6" />
+    </svg>
+  );
+}
+
 function Avatar({
   letter,
   bg,
@@ -111,40 +128,60 @@ function Avatar({
   );
 }
 
+const STATUS_STYLES: Record<ParentLink["status"], { bg: string; color: string; label: string }> = {
+  Active: { bg: "#CFEBD8", color: "#3E9B6C", label: "active" },
+  Pending: { bg: "#F7E7A6", color: "#9A7B1E", label: "invitation sent" },
+  Expired: { bg: "#E5DED3", color: "#8A7C6D", label: "invitation expired" },
+};
+
 function ParentRow({
-  name,
-  role,
-  status,
+  parent,
+  onResend,
+  resending,
 }: {
-  name: string;
-  role: string;
-  status: "Active" | "Pending";
+  parent: ParentLink;
+  onResend: () => void;
+  resending: boolean;
 }) {
-  const isActive = status === "Active";
+  const style = STATUS_STYLES[parent.status];
+  const isActive = parent.status === "Active";
   return (
     <div className="flex items-center gap-3">
       <Avatar
-        letter={name[0]}
+        letter={parent.name[0]}
         bg={isActive ? "#C9B6E8" : "#A9C7E8"}
         color="#fff"
         size={40}
         fontSize={16}
       />
       <div className="flex-1 min-w-0">
-        <div className="font-extrabold text-[14.5px] text-ink">{name}</div>
+        <div className="font-extrabold text-[14.5px] text-ink">{parent.name}</div>
         <div className="text-[12.5px] text-muted">
-          {role} · {isActive ? "active" : "invitation sent"}
+          {parent.role} · {style.label}
         </div>
       </div>
-      <span
-        className="flex-none text-[10.5px] font-extrabold px-[9px] py-1 rounded-full"
-        style={{
-          background: isActive ? "#CFEBD8" : "#F7E7A6",
-          color: isActive ? "#3E9B6C" : "#9A7B1E",
-        }}
-      >
-        {status.toUpperCase()}
-      </span>
+      {parent.status === "Expired" ? (
+        <button
+          onClick={onResend}
+          disabled={resending}
+          className="flex-none cursor-pointer font-extrabold text-[11.5px] px-[10px] py-1.5 rounded-full"
+          style={{
+            background: "#FFFDF9",
+            border: "1.5px solid #D8CBBA",
+            color: "#C5503A",
+            fontFamily: "inherit",
+          }}
+        >
+          {resending ? "Reinviting..." : "Reinvitar"}
+        </button>
+      ) : (
+        <span
+          className="flex-none text-[10.5px] font-extrabold px-[9px] py-1 rounded-full"
+          style={{ background: style.bg, color: style.color }}
+        >
+          {parent.status.toUpperCase()}
+        </span>
+      )}
     </div>
   );
 }
@@ -161,22 +198,31 @@ function DataRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-export default function KidProfileView({ kid }: { kid: Kid }) {
+export default function KidProfileView({
+  kid,
+  parents,
+}: {
+  kid: Kid;
+  parents: ParentLink[];
+}) {
+  const router = useRouter();
   const [parentModalOpen, setParentModalOpen] = useState(false);
-  const [parentsByKid, setParentsByKid] = useState<Record<string, LinkedParent[]>>({});
-  const parents = parentsByKid[kid.id] ?? kid.parentStatus ?? [];
+  const [pendingResend, setPendingResend] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const allergiesText =
     kid.allergies.length > 0
       ? `Allergic to ${kid.allergies.join(" and ").toLowerCase()}. ${kid.notes}`
       : kid.notes || "No allergies or medical notes.";
 
-  const handleParentSubmitted = (parent: NewParent) => {
-    setParentsByKid((prev) => ({
-      ...prev,
-      [kid.id]: [...(prev[kid.id] ?? kid.parentStatus ?? []), parent],
-    }));
-    setParentModalOpen(false);
+  const handleResend = (invitationId?: string) => {
+    if (!invitationId) return;
+    setPendingResend(invitationId);
+    startTransition(async () => {
+      await resendInvitation(invitationId);
+      setPendingResend(null);
+      router.refresh();
+    });
   };
 
   return (
@@ -302,10 +348,10 @@ export default function KidProfileView({ kid }: { kid: Kid }) {
                   {parents.length > 0 ? (
                     parents.map((parent, index) => (
                       <ParentRow
-                        key={`${parent.name}-${index}`}
-                        name={parent.name}
-                        role={parent.role}
-                        status={parent.status}
+                        key={parent.invitationId ?? `${parent.name}-${index}`}
+                        parent={parent}
+                        resending={pendingResend === parent.invitationId}
+                        onResend={() => handleResend(parent.invitationId)}
                       />
                     ))
                   ) : (
@@ -326,7 +372,7 @@ export default function KidProfileView({ kid }: { kid: Kid }) {
                         color: "#B0A290",
                       }}
                     >
-                      <PlusIcon />
+                      {isPending && pendingResend ? <RefreshIcon /> : <PlusIcon />}
                     </span>
                     <span className="font-extrabold text-[14.5px]" style={{ color: "#C5503A" }}>
                       Link another parent
@@ -340,9 +386,12 @@ export default function KidProfileView({ kid }: { kid: Kid }) {
       </main>
       <LinkParentModal
         open={parentModalOpen}
-        onClose={() => setParentModalOpen(false)}
+        onClose={() => {
+          setParentModalOpen(false);
+          router.refresh();
+        }}
         kidName={`${kid.firstName} ${kid.lastName}`}
-        onSubmitted={handleParentSubmitted}
+        childId={kid.id}
       />
     </div>
   );
