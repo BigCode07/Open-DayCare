@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { Kid } from "@/app/kids/page";
+import type { Kid } from "@/lib/kids";
 
 const POST_TYPES = [
   { label: "Food", activeBg: "#9A7B1E", activeColor: "#fff", idleBg: "#F4E6C4", idleColor: "#9A7B1E" },
