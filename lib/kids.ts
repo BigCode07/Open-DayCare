@@ -26,6 +26,34 @@ export type RoomOption = {
   name: string;
 };
 
+export type ParentLink = {
+  name: string;
+  role: string; // display: "Mom" | "Dad" | "Guardian"
+  status: "Active" | "Pending" | "Expired";
+  invitationId?: string;
+  code?: string;
+};
+
+export const RELATIONSHIP_DISPLAY: Record<string, string> = {
+  father: "Dad",
+  mother: "Mom",
+  guardian: "Guardian",
+};
+
+export function relationshipToDisplay(value: string): string {
+  return RELATIONSHIP_DISPLAY[value] ?? value;
+}
+
+export const RELATIONSHIP_TO_DB: Record<string, string> = {
+  Mom: "mother",
+  Dad: "father",
+  Guardian: "guardian",
+};
+
+export function relationshipToDb(value: string): string {
+  return RELATIONSHIP_TO_DB[value] ?? "guardian";
+}
+
 export type Kid = {
   id: string;
   firstName: string;
@@ -40,7 +68,7 @@ export type Kid = {
   avatarColor: string;
   avatarTextColor: string;
   initial: string;
-  parentStatus?: { name: string; role: string; status: "Active" | "Pending" }[];
+  parentStatus?: ParentLink[];
 };
 
 const AVATAR_COLORS = [

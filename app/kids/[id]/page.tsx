@@ -1,22 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
-import { toKid, type ChildRow } from "@/lib/kids";
+import { toKid, relationshipToDisplay, type ChildRow, type ParentLink } from "@/lib/kids";
 import KidProfileView from "@/app/components/kid-profile-view";
 
 type ChildWithRoom = ChildRow & {
   rooms: { id: string; name: string } | null;
-};
-
-type LinkedParent = {
-  name: string;
-  role: string;
-  status: "Active" | "Pending";
-};
-
-const ROLE_LABELS: Record<string, string> = {
-  father: "Dad",
-  mother: "Mom",
-  guardian: "Guardian",
 };
 
 export default async function KidProfilePage({
@@ -56,7 +44,7 @@ export default async function KidProfilePage({
     .select("relationship, users(id, full_name)")
     .eq("child_id", id);
 
-  const parents: LinkedParent[] = (parentLinks ?? []).map((link) => {
+  const parents: ParentLink[] = (parentLinks ?? []).map((link) => {
     const embedded = link.users as
       | { id: string; full_name: string }
       | { id: string; full_name: string }[]
@@ -64,13 +52,35 @@ export default async function KidProfilePage({
     const parent = Array.isArray(embedded) ? embedded[0] : embedded;
     return {
       name: parent?.full_name ?? "",
-      role: ROLE_LABELS[link.relationship] ?? "",
-      status: "Active",
+      role: relationshipToDisplay(link.relationship),
+      status: "Active" as const,
     };
   });
 
-  const kid = toKid(child as ChildWithRoom, parents.length, (child as ChildWithRoom).rooms?.name ?? "");
+  const { data: invitations } = await supabase
+    .from("invitations")
+    .select("id, full_name, email, relationship, status, expires_at, code")
+    .eq("child_id", id)
+    .in("status", ["pending"]);
+
+  const now = new Date().toISOString();
+  for (const inv of invitations ?? []) {
+    const expired = new Date(inv.expires_at).toISOString() <= now;
+    parents.push({
+      name: inv.full_name,
+      role: relationshipToDisplay(inv.relationship),
+      status: expired ? "Expired" : "Pending",
+      invitationId: inv.id,
+      code: inv.code,
+    });
+  }
+
+  const kid = toKid(
+    child as ChildWithRoom,
+    parents.filter((p) => p.status === "Active").length,
+    (child as ChildWithRoom).rooms?.name ?? ""
+  );
   kid.parentStatus = parents;
 
-  return <KidProfileView kid={kid} />;
+  return <KidProfileView kid={kid} parents={parents} />;
 }
